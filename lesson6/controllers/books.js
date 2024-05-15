@@ -1,14 +1,32 @@
+
 import Book from "../models/book.js";
 
-function getBooks (req, res, next) {
-    res.send("Books")
+async function getBooks (req, res, next) {
+    try {
+        const books = await Book.find();
+
+        res.send("Books");
+    }catch(error) {
+        next(error);
+    }
 };
 
 
-function getBook (req, res, next) {
+async function getBook (req, res, next) {
     const {id} = req.params;
 
-    res.send('Book ${id}');
+    try {
+        const book = await Book.findById(id);
+
+        if (book === null) {
+           return res.status(404).send("Book not found") 
+        }
+
+        res.send("Book");
+    } catch(error) {
+        next(error);
+    }
+
 
 };
 
@@ -37,16 +55,47 @@ async function createBook (req, res, next) {
 };
 
 
-function updateBook (req, res, next) {
+async function updateBook (req, res, next) {
     const {id} = req.params;
 
-res.send('Update ${id}');
+    const book = {
+        title: req.body.title,
+        author: req.body.author,
+        genre: req.body.genre,
+        year: req.body.year,
+        pages: req.body.pages
+    }
+
+    try {
+
+        const result = await Book.findByIdAndUpdate(id, book, {new: true});
+
+        if (book === null) {
+            return res.status(404).send("Book not found") 
+         }
+        
+        res.send('Update book ${id}');
+
+    } catch(error) {
+        next(error);
+    }
+
+
 };
 
-function deleteBook (req, res, next) {
+async function deleteBook (req, res, next) {
     const {id} = req.params;
 
-    res.send('Delete ${id}') ;   
+    try {
+        const books = await Book.findByIdAndDelete(id);
+        if (book === null) {
+            return res.status(404).send("Book not found") 
+         }
+
+        res.send({ id });
+    }catch(error) {
+        next(error);
+    }  
 };
 
 export default {
