@@ -8,7 +8,9 @@
   "description": "",
   "main": "index.js",
   "devDependencies": {},
+  "type": "module",
   "scripts": {
+    "start":"node snake.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
